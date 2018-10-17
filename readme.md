@@ -71,7 +71,7 @@ Migrate
         vagrant@homestead:~/code/sapp$ php artisan migrate
                             Migrating: 2018_10_17_213015_create_channels_table
                             Migrated:  2018_10_17_213015_create_channels_table
-                            
+
 #### edit user.php Model ####
 
 Insert Channels function inside of user.php 
@@ -147,5 +147,110 @@ and
 
 #### Edit register.blade.php ####
 
-        Insert Div for channel name convention. 
+Div Snip for register.blade.php
+
+         <div class="form-group row">
+                            <label for="channel_name" class="col-md-4 col-form-label text-md-right">{{ __('Channel name') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="channel_name" type="text" class="form-control{{ $errors->has('channel_name') ? ' is-invalid' : '' }}" name="channel_name" value="{{ old('channel_name') }}" required autofocus>
+
+                                @if ($errors->has('channel_name'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('channel_name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+### Setup Queueing for uploading profile pictures in background ###
+
+
+#### basic queueing ####
+
+Create Jobs table and Failed Jobs Table
+
+            vagrant@homestead:~/code/sapp$ php artisan queue:table
+                Migration created successfully!
+            vagrant@homestead:~/code/sapp$ php artisan queue:failed-table
+                Migration created successfully!
+
+Migrate to create tables on SQL
+
+            vagrant@homestead:~/code/sapp$ php artisan migrate
+                Migrating: 2018_10_17_221525_create_jobs_table
+                Migrated:  2018_10_17_221525_create_jobs_table
+                Migrating: 2018_10_17_221550_create_failed_jobs_table
+                Migrated:  2018_10_17_221550_create_failed_jobs_table
     
+Larger jobs done here. You can now create, dispatch, and uploads jobs. 
+
+##### can also queue index searching #####
+
+
+### Create Navigation Partial ###
+
+Create layouts/partials
+Create _navigation.blade.php 
+Paste nav snip inside.
+
+
+### Create Header Partial ###
+
+
+Create _head.blade.php 
+Paste header snip inside.
+
+Include partials back into app.blade.php code
+
+#### Create ViewComposers ####
+
+Create ViewComposers folder inside Http folder
+
+inside folder, create NavigationComposer.php
+
+        <?php
+
+            namespace App\Http\ViewComposers;
+
+            use Auth;
+            use Illuminate\View\View;
+
+            class NavigationComposer
+            {
+                public function compose(View $view)
+                {
+                    if (!Auth::check()) {
+                        return;
+                    }
+
+                    $view->with('channel', Auth::user()->channel->first());
+                }
+            }
+
+Create provider to work with composer. 
+
+        vagrant@homestead:~/code/sapp$ php artisan make:provider ComposerServiceProvider
+                                    Provider created successfully.
+
+Edit Provider
+
+          public function boot()
+                        {
+                            view()->composer(
+                                'layouts.partials._navigation',
+                                \App\Http\ViewComposers\NavigationComposer::class
+                            );
+                        }
+
+Register Provider in Config/app.php
+
+Add to nav drop down html to generate unique URL for channel. 
+
+        <a class="dropdown-item" href="{{ url('/channel/' . $channel->slug) }}">Your Channel</a>
+        <a class="dropdown-item" href="{{ url('/channel/' . $channel->slug . '/edit') }}">Channel settings</a>
+
+### Create Channel Settings ### 
+
+    
+
