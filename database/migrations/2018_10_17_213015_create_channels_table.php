@@ -9,6 +9,10 @@ class CreateChannelsTable extends Migration
     /**
      * Run the migrations.
      *
+     * Consider making a [] $table->string('genre'); ] then have a list of choices on register.blade.php
+     * inside of a drop down with catagory choices to preselect values from.
+     *
+     *
      * @return void
      */
     public function up()

@@ -40,14 +40,14 @@ Close and Reopen Terminal to use nvm.
 Update git repositry here for updated fallback VM. 
 
 ### Create Authentication ###
-####Php Artisan to generate migrations, scaffolding, and appropriate layouts####
+#### Php Artisan to generate migrations, scaffolding, and appropriate layouts ####
 
-    Make Authentication files.
+Make Authentication files.
 
         vagrant@homestead:~/code/sapp$ php artisan make:auth
             Authentication scaffolding generated successfully.
 
-    Migrate to database created during homestead/vagrant provisioning 
+Migrate to database created during homestead/vagrant provisioning 
 
         vagrant@homestead:~/code/sapp$ php artisan migrate
 
@@ -57,12 +57,12 @@ Input user and pass inside .env file from mailtrap.io inbox dashboard.
 ### Create a 'Channel' ###
 #### Generate a model && migration for channel database info ####
 
-    Make model folder. -m flag creates migration as well. 
+Make model folder. -m flag creates migration as well. 
 
         vagrant@homestead:~/code/sapp$ php artisan make:model Models\\Channel -m
                             Model created successfully.
                             Created Migration: 2018_10_17_213015_create_channels_table
 
-                            
+
 #### Edit register.blade.php ####
     
