@@ -50,6 +50,10 @@ Make Authentication files.
 Migrate to database created during homestead/vagrant provisioning 
 
         vagrant@homestead:~/code/sapp$ php artisan migrate
+            Migrating: 2014_10_12_000000_create_users_table
+            Migrated:  2014_10_12_000000_create_users_table
+            Migrating: 2014_10_12_100000_create_password_resets_table
+            Migrated:  2014_10_12_100000_create_password_resets_table
 
 #### Feel free to setup mailtrap.io box to test ####
 Input user and pass inside .env file from mailtrap.io inbox dashboard. 
@@ -63,6 +67,85 @@ Make model folder. -m flag creates migration as well.
                             Model created successfully.
                             Created Migration: 2018_10_17_213015_create_channels_table
 
+Migrate 
+        vagrant@homestead:~/code/sapp$ php artisan migrate
+                            Migrating: 2018_10_17_213015_create_channels_table
+                            Migrated:  2018_10_17_213015_create_channels_table
+                            
+#### edit user.php Model ####
+
+Insert Channels function inside of user.php 
+
+        public function channel()
+        {
+            return $this->hasMany(Channel::class);
+        }
+
+Move user.php inside new Models folder /app/http/models
+Don't forget to change namespace in user.php App/Models
+
+        namespace App\Models;
+
+Also update user.php location in config/auth.php
+
+        'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User\::class,
+        ],
+
+Also update registercontroller.php
+
+        use App\Models\User;
+
+#### edit Models/Channel.php ####
+
+Create Function
+
+            class Channel extends Model
+                    {
+                        protected $fillable = [
+                            'name',
+                            'slug',
+                            'description',
+                            'image_filename',
+                        ];
+
+                        public function user()
+                        {
+                            return $this->belongsTo(User::class);
+                        }
+                    }
+
+            
+#### Edit RegisterController.php ####
+
+        protected function create(array $data)
+    {
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        $user->channel()->create([
+            'name' => $datal['channel_name'],
+            'slug' => uniqid(true),
+        ]);
+
+        return $user;
+    }
+
+and
+
+         return Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'channel_name' => 'required|max:255|unique:channels,name',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
 
 #### Edit register.blade.php ####
+
+        Insert Div for channel name convention. 
     
