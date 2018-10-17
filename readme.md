@@ -188,14 +188,14 @@ Larger jobs done here. You can now create, dispatch, and uploads jobs.
 ##### can also queue index searching #####
 
 
-### Create Navigation Partial ###
+#### Create Navigation Partial ####
 
 Create layouts/partials
 Create _navigation.blade.php 
 Paste nav snip inside.
 
 
-### Create Header Partial ###
+#### Create Header Partial ####
 
 
 Create _head.blade.php 
@@ -252,5 +252,42 @@ Add to nav drop down html to generate unique URL for channel.
 
 ### Create Channel Settings ### 
 
-    
+#### Basic information for channel settings ####
+route/web.php 
+note need to make controller.
 
+        Route::group(['middleware' => ['auth']], function () {
+                Route::get('/channel/{channel}/edit', 'ChannelSettingsController@edit');
+                Route::put('/channel/{channel}/edit', 'ChannelSettingsController@update');
+        });
+
+Create controller
+
+        vagrant@homestead:~/code/sapp$ php artisan make:controller ChannelSettingsController
+                        Controller created successfully.
+
+Create folders views/channel/settings
+Markup edit.blade.php for channel settings 
+
+Create Requests 
+
+        vagrant@homestead:~/code/sapp$ php artisan make:request ChannelUpdateRequest
+        Request created successfully.
+
+Update ChannelUpdateRequests.php
+
+          public function rules()
+                {
+                    $channelId = Auth::user()->channel->first()->id;
+
+                    return [
+                        'name' => 'required|max:255|unique:channels,name' . $channelId,
+                        'slug' => 'required|max:255|alpha_num|unique:channels,slug',
+                        'description' => 'max:1000',
+                    ];
+                }
+
+Create Channel Policy
+
+            vagrant@homestead:~/code/sapp$ php artisan make:policy ChannelPolicy
+                Policy created successfully.
