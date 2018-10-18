@@ -1,17 +1,16 @@
 # Creating Laravel Webapp #
-## Project Codename: 'sapp' ##
-
-### What is this? ###
+### Project Codename: 'sapp' ###
 
 #### Introduction ####
 
 This is my first start to finish project from the ground up. This will be a niche Tube site.
-
-
+It will include user database, user submitted data for views, user submitted videos/photos, 
+seach/indexing, and more. 
 
 ### Step by Step ###
 
 #### some notes ####
+
 the .gitignore file is preloaded with laravel.
 I am converting a Django project to Laravel from the ground up. 
 This includes creation and implementation of media, user, and user-data-submitted Database. 
@@ -44,15 +43,15 @@ Check Framework Version
 
 Install this script to install nvm to update npm. 
 
-        vagrant@homestead:~/code/cheftubeapp$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+        vagrant@homestead:~/code/sapp$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 
 Close and Reopen Terminal to use nvm.
     
         vagrant@homestead:~$ nvm install --latest-npm
-        vagrant@homestead:~/code/cheftubeapp$ sudo npm install -g npm
-        vagrant@homestead:~/code/cheftubeapp$ npm rebuild node-sass
-        vagrant@homestead:~/code/cheftubeapp$ npm install
-        vagrant@homestead:~/code/cheftubeapp$ npm run dev
+        vagrant@homestead:~/code/sapp$ sudo npm install -g npm
+        vagrant@homestead:~/code/sapp$ npm rebuild node-sass
+        vagrant@homestead:~/code/sapp$ npm install
+        vagrant@homestead:~/code/sapp$ npm run dev
     
 Update git repositry here for updated fallback VM. 
 
@@ -75,7 +74,9 @@ Migrate to database created during homestead/vagrant provisioning
 #### Feel free to setup mailtrap.io box to test ####
 Input user and pass inside .env file from mailtrap.io inbox dashboard. 
 
-### Create a 'Channel' ###
+### Create a 'Channel' database ###
+Users will be able to create channel on registration, and edit channels submitted-info. 
+
 #### Generate a model && migration for channel database info ####
 
 Make model folder. -m flag creates migration as well. 
@@ -378,3 +379,4 @@ Make show.blade.php file inside views/channel
             show.blade.php
 
             Enter HTML here. 
+
