@@ -1,11 +1,23 @@
 # Creating Laravel Webapp #
-## Step by Step ##
+## Project Codename: 'sapp' ##
+
+### What is this? ###
+
+#### Introduction ####
+
+This is my first start to finish project from the ground up. This will be a niche Tube site.
+
+
+
+### Step by Step ###
 
 #### some notes ####
 the .gitignore file is preloaded with laravel.
 I am converting a Django project to Laravel from the ground up. 
 This includes creation and implementation of media, user, and user-data-submitted Database. 
 Database will be MYSQL for vagrant development and Postgres when deployed on Laravel's forge. 
+
+This assumes you already have vagrant and homestead up and running. 
 
 #### services used ####
 
@@ -22,6 +34,11 @@ mailtrap.io | set up email tests
         user@home/code/$:composer create-project laravel/laravel [sapp]
         user@Homestead$ vagrant up
         user@Homestead$ vagrant ssh
+
+Check Framework Version
+
+        vagrant@homestead:~/code/sapp$ php artisan --version
+                        Laravel Framework 5.7.9
     
 ### Update NPM / latest nodejs off the bat to make sure everything is running smooth/compiling ###
 
@@ -274,20 +291,90 @@ Create Requests
         vagrant@homestead:~/code/sapp$ php artisan make:request ChannelUpdateRequest
         Request created successfully.
 
-Update ChannelUpdateRequests.php
+Update ChannelUpdateRequests.php inside Http/Requests
 
           public function rules()
                 {
                     $channelId = Auth::user()->channel->first()->id;
 
                     return [
-                        'name' => 'required|max:255|unique:channels,name' . $channelId,
-                        'slug' => 'required|max:255|alpha_num|unique:channels,slug',
+                        'name' => 'required|max:255|unique:channels,name,' . $channelId,
+                        'slug' => 'required|max:255|alpha_num|unique:channels,slug,' . $channelId,
                         'description' => 'max:1000',
                     ];
                 }
+            
+Change from False to True since Auth is taken care of in wrapper. 
+
+            public function authorize()
+                {
+                    return true;
+                }
+
 
 Create Channel Policy
 
             vagrant@homestead:~/code/sapp$ php artisan make:policy ChannelPolicy
-                Policy created successfully.
+                                           Policy created successfully.
+
+Edit ChannelPolicy to add authorization Bool check to function
+
+            <?php
+
+                    namespace App\Policies;
+
+                    use App\Models\User;
+                    use App\Models\Channel;
+                    use Illuminate\Auth\Access\HandlesAuthorization;
+
+                    class ChannelPolicy
+                    {
+                    use HandlesAuthorization;
+
+                    public function edit(User $user, Channel $channel)
+                    {
+                        return $user->id === $channel->user_id;
+                    }
+
+                    public function update(User $user, Channel $channel)
+                    {
+                        return $user->id === $channel->user_id;
+                    }
+                    }
+
+Add Policy to AuthServiceProvider
+
+            protected $policies = [
+                'App\Models\Channel' => 'App\Policies\ChannelPolicy',
+            ];
+
+Create Channel Controller
+
+
+            vagrant@homestead:~/code/sapp$ php artisan make:controller ChannelController
+
+Edit ChannelController to allow view of your Channel. This returns the view of your slug in the database. 
+
+            <?php
+
+                namespace App\Http\Controllers;
+
+                use App\Models\Channel;
+                use App\Http\Requests;
+                use Illuminate\Http\Request;
+
+                class ChannelController extends Controller
+                {
+                    public function show(Channel $channel)
+                    {
+                        return view('channel.show', [
+                            'channel' => $channel,
+                        ]);
+                    }
+                }
+
+Make show.blade.php file inside views/channel
+
+            show.blade.php
+
+            Enter HTML here. 

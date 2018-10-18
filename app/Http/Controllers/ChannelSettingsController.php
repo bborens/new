@@ -19,10 +19,18 @@ class ChannelSettingsController extends Controller
             'channel' => $channel
         ]);
     }
-
+    #channelupdaterequest???!
     public function update(ChannelUpdateRequest $request, Channel $channel)
     {
 
         $this->authorize('update', $channel);
+
+        $channel->update([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->to("/channel/{$channel->slug}/edit");
     }
 }
