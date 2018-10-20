@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">Channel Settings</div>
                     <div class="card-body">
-                        <form action="/channel/{{ $channel->slug }}/edit" method="post">
+                        <form action="/channel/{{ $channel->slug }}/edit" method="post" enctype="multipart/form-data">
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 
                                 <div class="">

@@ -26,7 +26,9 @@ ngrok.io | SSH with webhooks (or use rcode with vscode to ssh )
 algolia w/ laravel/scout | index 
 mailtrap.io | set up email tests
 
-### Install Laravel Project with Composer ###
+# Setup bare backend of Laravel Web App #
+
+## Install Laravel Project with Composer and Update VM ##
 
 [sapp] is projectname variable. Wait until Downloaded, then vagrant into Virtual homestead box. 
     
@@ -54,6 +56,8 @@ Close and Reopen Terminal to use nvm.
         vagrant@homestead:~/code/sapp$ npm run dev
     
 Update git repositry here for updated fallback VM. 
+
+## Work on user database and backend functionality ##
 
 ### Create Authentication ###
 #### Php Artisan to generate migrations, scaffolding, and appropriate layouts ####
@@ -380,3 +384,38 @@ Make show.blade.php file inside views/channel
 
             Enter HTML here. 
 
+***Laravel Site Backend _ Featureless Comepleted***
+
+### ***Backed up at this point on branch : backendBranch *** ###
+
+# Connect to S3 #
+
+Create AmazonAWS account
+
+Create Bucket in S3, Region us-east-1
+
+Go to IAM and create User to attach policy to.
+
+    # Copy Access Key ID and Secret Access Key
+    # Configure filesystems.php environment variables
+
+Install AWS SDK
+
+    vagrant@homestead:~/code/sapp$ composer require aws/aws-sdk-php
+                Using version ^3.69 for aws/aws-sdk-php
+                ./composer.json has been updated
+
+Install Flysystem for storage inside laravel. 
+
+    vagrant@homestead:~/code/sapp$ composer require league/flysystem-aws-s3-v3 ~1.0.21
+                                ./composer.json has been updated
+
+Create uploads folder in Storage
+
+Make Upload Images Job
+            vagrant@homestead:~/code/sapp$ php artisan make:job UploadImage
+            Job created successfully.
+
+            if (Storage::disk('s3images')->put('profile/' . $fileName, fopen($path, 'r+'))) {
+                File::delete($path);
+            }
